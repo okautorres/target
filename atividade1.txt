@@ -1,0 +1,12 @@
+1) Observe o trecho de código abaixo: int INDICE = 13, SOMA = 3 K = 3;
+Enquanto K < INDICE faça { K = K + 1; SOMA = SOMA + K; }
+Imprimir(SOMA);
+Ao final do processamento, qual será o valor da variável SOMA?
+
+===RESPOSTA===========================================================================================
+Será 91, pois a cada repetição será somado um no valor de K (K+1), mais o resultado final da soma anterior.(K+1) + (SOMA anterior).
+Exemplo:
+0(Soma anterior) + 1(K) = 1
+2(K) + 1(Soma anterior) = 3
+3(K) + 3(Soma anterior) = 6 
+4 + 6 = 10
