@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <string.h>
+
+// Constantes para seções, gôndolas e produtos
+#define SECTIONS 5
+#define GONDOLAS 10
+#define PRODUCTS 20
+
+// Vetores multidimensionais para armazenar código e nome do produto
+int codigoProduto[SECTIONS][GONDOLAS][PRODUCTS] = {0};
+char nomeProduto[SECTIONS][GONDOLAS][PRODUCTS][30] = {""};
+
+// Função para cadastrar um produto
+void cadastrarProduto() {
+    int secao, gondola, produto, codigo;
+    char nome[30];
+
+    printf("Digite a seção (1 a %d): ", SECTIONS);
+    scanf("%d", &secao);
+    printf("Digite a gôndola (1 a %d): ", GONDOLAS);
+    scanf("%d", &gondola);
+    printf("Digite o número do produto (1 a %d): ", PRODUCTS);
+    scanf("%d", &produto);
+
+    // Ajuste para o índice
+    secao -= 1;
+    gondola -= 1;
+    produto -= 1;
+
+    // Validação de posição
+    if (secao < SECTIONS && gondola < GONDOLAS && produto < PRODUCTS && secao >= 0 && gondola >= 0 && produto >= 0) {
+        printf("Digite o nome do produto: ");
+        scanf(" %[^\n]s", nome); // Lê o nome do produto, incluindo espaços
+        printf("Digite o código do produto: ");
+        scanf("%d", &codigo);
+
+        // Armazenar os dados
+        codigoProduto[secao][gondola][produto] = codigo;
+        strcpy(nomeProduto[secao][gondola][produto], nome);
+
+        printf("Produto cadastrado com sucesso em S%d-G%d-P%d\n", secao + 1, gondola + 1, produto + 1);
+    } else {
+        printf("Localização inválida.\n");
+    }
+}
+
+// Função para listar todos os produtos
+void listarProdutos() {
+    printf("Lista de Produtos no Armazém:\n");
+    for (int s = 0; s < SECTIONS; s++) {
+        for (int g = 0; g < GONDOLAS; g++) {
+            for (int p = 0; p < PRODUCTS; p++) {
+                if (codigoProduto[s][g][p] != 0) { // Verifica se há um produto cadastrado
+                    printf("Seção S%d - Gôndola G%d - Produto P%d: %s (Código: %d)\n",
+                           s + 1, g + 1, p + 1, nomeProduto[s][g][p], codigoProduto[s][g][p]);
+                }
+            }
+        }
+    }
+}
+
+// Função para consultar um único produto
+void consultarProduto() {
+    int secao, gondola, produto;
+
+    printf("Digite a seção (1 a %d): ", SECTIONS);
+    scanf("%d", &secao);
+    printf("Digite a gôndola (1 a %d): ", GONDOLAS);
+    scanf("%d", &gondola);
+    printf("Digite o número do produto (1 a %d): ", PRODUCTS);
+    scanf("%d", &produto);
+
+    // Ajuste para o índice
+    secao -= 1;
+    gondola -= 1;
+    produto -= 1;
+
+    // Verificação e exibição do produto
+    if (secao < SECTIONS && gondola < GONDOLAS && produto < PRODUCTS && secao >= 0 && gondola >= 0 && produto >= 0) {
+        int codigo = codigoProduto[secao][gondola][produto];
+        if (codigo != 0) {
+            printf("Produto encontrado em S%d-G%d-P%d: %s (Código: %d)\n",
+                   secao + 1, gondola + 1, produto + 1, nomeProduto[secao][gondola][produto], codigo);
+        } else {
+            printf("Nenhum produto encontrado em S%d-G%d-P%d.\n", secao + 1, gondola + 1, produto + 1);
+        }
+    } else {
+        printf("Localização inválida.\n");
+    }
+}
+
+// Função principal
+int main() {
+    int opcao;
+    do {
+        printf("\nMenu:\n");
+        printf("1. Cadastrar Produto\n");
+        printf("2. Listar Produtos\n");
+        printf("3. Consultar Produto\n");
+        printf("4. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                cadastrarProduto();
+                break;
+            case 2:
+                listarProdutos();
+                break;
+            case 3:
+                consultarProduto();
+                break;
+            case 4:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opção inválida.\n");
+        }
+    } while (opcao != 4);
+
+    return 0;
+}
