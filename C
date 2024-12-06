@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Definição da estrutura Pacote
+typedef struct Pacote {
+    int id;
+    char conteudo[50];
+    char origem[50];
+    char destino[50];
+    int status; // 1: Em processamento, 2: Em trânsito, 3: Em espera, 4: Entregue, 99: Extraviado
+    struct Pacote *proximo;
+} Pacote;
+
+Pacote *inicio = NULL;
+int idAtual = 2040482412007; // RA inicial como ID base
+
+// Função para criar um novo nó na lista encadeada
+Pacote* criarPacote(char conteudo[], char origem[], char destino[], int status) {
+    Pacote *novo = (Pacote *)malloc(sizeof(Pacote));
+    if (novo == NULL) {
+        printf("Erro ao alocar memória.\n");
+        return NULL;
+    }
+
+    novo->id = ++idAtual;
+    strcpy(novo->conteudo, conteudo);
+    strcpy(novo->origem, origem);
+    strcpy(novo->destino, destino);
+    novo->status = status;
+    novo->proximo = NULL;
+
+    return novo;
+}
+
+// Função para incluir um pacote
+void incluirPacote() {
+    char conteudo[50], origem[50], destino[50];
+    printf("Digite o conteúdo do pacote: ");
+    scanf(" %[^\n]", conteudo);
+    printf("Digite a cidade de origem: ");
+    scanf(" %[^\n]", origem);
+    printf("Digite a cidade de destino: ");
+    scanf(" %[^\n]", destino);
+
+    Pacote *novo = criarPacote(conteudo, origem, destino, 1); // Status inicial: Em processamento
+    if (inicio == NULL) {
+        inicio = novo;
+    } else {
+        novo->proximo = inicio;
+        inicio = novo;
+    }
+
+    printf("Pacote ID %d adicionado com sucesso.\n", novo->id);
+}
+
+// Função para alterar o status de um pacote
+void alterarStatus() {
+    int id, novoStatus;
+    printf("Digite o ID do pacote: ");
+    scanf("%d", &id);
+
+    Pacote *atual = inicio;
+    while (atual != NULL) {
+        if (atual->id == id) {
+            printf("Digite o novo status (1: Em processamento, 2: Em trânsito, 3: Em espera, 4: Entregue, 99: Extraviado): ");
+            scanf("%d", &novoStatus);
+            atual->status = novoStatus;
+            printf("Status do pacote ID %d atualizado para %d.\n", id, novoStatus);
+            return;
+        }
+        atual = atual->proximo;
+    }
+
+    printf("Pacote com ID %d não encontrado.\n", id);
+}
+
+// Função para rastrear um pacote por ID
+void rastrearPacote() {
+    int id;
+    printf("Digite o ID do pacote: ");
+    scanf("%d", &id);
+
+    Pacote *atual = inicio;
+    while (atual != NULL) {
+        if (atual->id == id) {
+            printf("\nPacote ID: %d\n", atual->id);
+            printf("Conteúdo: %s\n", atual->conteudo);
+            printf("Origem: %s\n", atual->origem);
+            printf("Destino: %s\n", atual->destino);
+            printf("Status: %d\n", atual->status);
+            return;
+        }
+        atual = atual->proximo;
+    }
+
+    printf("Pacote com ID %d não encontrado.\n", id);
+}
+
+// Função para listar todos os pacotes
+void listarPacotes() {
+    if (inicio == NULL) {
+        printf("Nenhum pacote registrado.\n");
+        return;
+    }
+
+    Pacote *atual = inicio;
+    printf("\nLista de pacotes:\n");
+    while (atual != NULL) {
+        printf("ID: %d | Conteúdo: %s | Origem: %s | Destino: %s | Status: %d\n",
+               atual->id, atual->conteudo, atual->origem, atual->destino, atual->status);
+        atual = atual->proximo;
+    }
+}
+
+// Menu principal
+void menu() {
+    int opcao;
+    do {
+        printf("\nMenu:\n");
+        printf("1. Incluir pacote\n");
+        printf("2. Alterar status de pacote\n");
+        printf("3. Rastrear pacote\n");
+        printf("4. Listar todos os pacotes\n");
+        printf("5. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                incluirPacote();
+                break;
+            case 2:
+                alterarStatus();
+                break;
+            case 3:
+                rastrearPacote();
+                break;
+            case 4:
+                listarPacotes();
+                break;
+            case 5:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opção inválida.\n");
+        }
+    } while (opcao != 5);
+}
+
+int main() {
+    menu();
+    return 0;
+}
